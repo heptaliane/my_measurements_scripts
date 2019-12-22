@@ -17,8 +17,8 @@ def detect_lockin_amplifier_type(resource):
 
 
 def setup_lockin_amplifier(address, model_id=None, resource_manager=None):
-    if not isinstance(resource_manager, rm.ResourceManager):
-        resource_manager = rm.ResourceManager()
+    if not isinstance(resource_manager, visa.ResourceManager):
+        resource_manager = visa.ResourceManager()
 
     if model_id is None:
         resource = resource_manager.open_resource(address)

@@ -13,8 +13,9 @@ logger.addHandler(NullHandler())
 
 CHANNEL_LABELS = ('C1','C2', 'TA', 'TB', 'TC', 'TD')
 
-class Lecroy_LT324L(Oscilloscope):
-    IDN_STR = '*IDN? LECROY,LT324L'
+class Lecroy_LT342L(Oscilloscope):
+    IDN_STR = '*IDN LECROY,LT342L'
+    IDN_STR2 = 'LECROY,LT342L'
 
     def __init__(self, resource):
         super().__init__(resource)
@@ -33,16 +34,16 @@ class Lecroy_LT324L(Oscilloscope):
         vs = self.query_binary_values('%s:WAVEFORM? DAT1', ch,
                                       datatype='h',
                                       is_big_endian=True)
-        vs = np.asarray(xs, dtype=np.float32)
+        vs = np.asarray(vs, dtype=np.float32)
 
         meta = self.query_binary_values('%s:WAVEFORM? DESC', ch,
                                         datatype='c')
         # Read header byte (156--160) as float
-        vdiv = struct.unpack('f', b''.join(meta[156:160])[::-1])
+        vdiv = struct.unpack('f', b''.join(meta[156:160])[::-1])[0]
         # Read header byte (160--164) as float
-        voffset = struct.unpack('f', b''.join(meta[160:164])[::-1])
+        voffset = struct.unpack('f', b''.join(meta[160:164])[::-1])[0]
         # Read header byte (176--180) as float
-        dt = struct.unpack('f', b''.join(meta[176:180])[::-1])
+        dt = struct.unpack('f', b''.join(meta[176:180])[::-1])[0]
 
         vs = vs * vdiv + voffset
         ts = np.arange(0, vs.shape[0] * dt, dt)

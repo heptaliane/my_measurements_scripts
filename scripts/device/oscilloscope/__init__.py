@@ -13,17 +13,19 @@ logger.addHandler(NullHandler())
 def detect_oscilloscope_type(resource):
     idn = resource.query('*IDN?')
 
-    if idn.startswith(HP_8648C.IDN_STR):
+    if idn.startswith(Lecroy_LT342L.IDN_STR):
         return 'lt342l'
-    elif idn.startswith(NF_WF1946.IDN_STR):
+    elif idn.startswith(Lecroy_LT342L.IDN_STR2):
+        return 'lt342l'
+    elif idn.startswith(Yokogawa_DL9140L.IDN_STR):
         return 'dl9140l'
 
     return ''
 
 
 def setup_oscilloscope(address, model_id=None, resource_manager=None):
-    if not isinstance(resource_manager, rm.ResourceManager):
-        resource_manager = rm.ResourceManager()
+    if not isinstance(resource_manager, visa.ResourceManager):
+        resource_manager = visa.ResourceManager()
 
     if model_id is None:
         resource = resource_manager.open_resource(address)
