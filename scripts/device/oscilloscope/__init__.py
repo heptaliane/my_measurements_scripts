@@ -1,41 +1,41 @@
 # -*- coding: utf-8 -*-
 import visa
 
-from .interface import SignalGenerator
-from .hp_8648c import HP_8648C
-from .nf_wf1946 import NF_WF1946
+from .interface import Oscilloscope
+from .lecroy_lt342l import Lecroy_LT342L
+from .yokogawa_dl9140l import Yokogawa_DL9140L
 
 from logging import getLogger, NullHandler
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-def detect_signal_generator_type(resource):
+def detect_oscilloscope_type(resource):
     idn = resource.query('*IDN?')
 
     if idn.startswith(HP_8648C.IDN_STR):
-        return '8648c'
+        return 'lt342l'
     elif idn.startswith(NF_WF1946.IDN_STR):
-        return 'wf1946'
+        return 'dl9140l'
 
     return ''
 
 
-def setup_signal_generator(address, model_id=None, resource_manager=None):
+def setup_oscilloscope(address, model_id=None, resource_manager=None):
     if not isinstance(resource_manager, rm.ResourceManager):
         resource_manager = rm.ResourceManager()
 
     if model_id is None:
         resource = resource_manager.open_resource(address)
-        model_id = detect_signal_generator_type(resource)
+        model_id = detect_oscilloscope_type(resource)
         assert model_id, 'Cannot detect device. (%s)' % address
 
-    if model_id.lower() == '8648c':
-        logger.info('Setup HP 8648C Signal Generator.')
-        return HP_8648C(resource)
+    if model_id.lower() == 'lt342l':
+        logger.info('Setup Lecroy LT342L Oscilloscope.')
+        return Lecroy_LT342L(resource)
 
-    elif model_id.lower() == 'wf1946':
-        logger.info('Setup WF WF1946 Signal Generator.')
-        return NF_WF1946(resource)
+    elif model_id.lower() == 'dl9140l':
+        logger.info('Setup HP DL9140L Oscilloscope.')
+        return Yokogawa_DL9140L(resource)
 
     raise NotImplementedError('"%s" is not implemented.' % model_id)

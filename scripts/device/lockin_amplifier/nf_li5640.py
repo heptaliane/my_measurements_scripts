@@ -26,7 +26,7 @@ AVAILABLE_CURRENT_RANGE = (     -1, 5.0e-15, 1.0e-14, 2.0e-14, 5.0e-14,
 
 
 class NF_LI5640(LockinAmplifier):
-    IDN_STR = 'NF-ELECTRONIC-INSTRUMENTS'
+    IDN_STR = 'NF-ELECTRONIC-INSTRUMENTS,LI5640'
 
     class OutputType(IntEnum):
         LINE = 0
@@ -112,21 +112,15 @@ class NF_LI5640(LockinAmplifier):
         return tuple([float(v) for v in arr])
 
     def write(self, cmd, *args):
-        if args:
-            cmd = cmd % args
-
         # Command should not end with ' '
         while cmd.endswith(' '):
             cmd = cmd[:-1]
 
-        self._inst.write(cmd)
+        super().write(cmd, *args)
 
     def query(self, cmd, *args):
-        if args:
-            cmd = cmd % args
-
         # Command should not end with ' '
         while cmd.endswith(' '):
             cmd = cmd[:-1]
 
-        return self._inst.query(cmd)[:-1]
+        return super().query(cmd, *args)
