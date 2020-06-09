@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta, abstractmethod
 
-from .. import DeviceHandler
+from ..interface import DeviceHandler
 
 
 class SignalGenerator(DeviceHandler, metaclass=ABCMeta):

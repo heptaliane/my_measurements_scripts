@@ -14,8 +14,7 @@ logger.addHandler(NullHandler())
 CHANNEL_LABELS = ('C1','C2', 'TA', 'TB', 'TC', 'TD')
 
 class Lecroy_LT342L(Oscilloscope):
-    IDN_STR = '*IDN LECROY,LT342L'
-    IDN_STR2 = 'LECROY,LT342L'
+    IDN_STR = ('*IDN LECROY,LT342L', 'LECROY,LT342L')
 
     def __init__(self, resource):
         super().__init__(resource)
@@ -25,7 +24,11 @@ class Lecroy_LT342L(Oscilloscope):
         self.write('COMM_HEADER OFF')
 
     def start(self):
-        self.write('TRIG_MODE AUTO')
+        self.write('TRIG_MODE NORM')
+
+        for ch in CHANNEL_LABELS[-4:]:
+            if self.query('%s:TRACE?', ch) == 'ON':
+                self.write('%s:FUNCTION_RESET', ch)
 
     def stop(self):
         self.write('TRIG_MODE STOP')

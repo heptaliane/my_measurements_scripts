@@ -3,7 +3,7 @@ from .interface import SignalGenerator
 
 
 class HP_8648C(SignalGenerator):
-    IDN_STR = 'Hewlett-Packard, 8648C'
+    IDN_STR = 'Hewlett-Packard, 8648'
 
     def set_frequency(self, freq):
         self.write('FREQ:CW %e Hz', freq)

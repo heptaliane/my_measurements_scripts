@@ -2,7 +2,7 @@
 from abc import ABCMeta, abstractmethod
 from enum import Enum, auto
 
-from .. import DeviceHandler
+from ..interface import DeviceHandler
 
 
 class LockinAmplifier(DeviceHandler, metaclass=ABCMeta):

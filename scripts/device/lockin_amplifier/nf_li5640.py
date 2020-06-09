@@ -70,7 +70,7 @@ class NF_LI5640(LockinAmplifier):
             raise ValueError(err_msg)
 
     def get_variable_type(self):
-        type_tepmlate = ((self.VariableType.X, self.VariableType.R)
+        type_tepmlate = ((self.VariableType.X, self.VariableType.R),
                          (self.VariableType.R, self.VariableType.THETA))
 
         var_types = [self.VariableType.UNKNOWN] * 2
@@ -106,6 +106,10 @@ class NF_LI5640(LockinAmplifier):
         err_msg = 'Too high current is expected. (%.1e A > %.1e A)'
         logger.error(err_msg, imax, AVAILABLE_CURRENT_RANGE[:-1])
         raise ValueError(err_msg % (imax, AVAILABLE_CURRENT_RANGE[:-1]))
+
+    def get_current_sensitivity(self):
+        iidx = int(self.query('ISEN?'))
+        return AVAILABLE_CURRENT_RANGE[iidx]
 
     def get_amplitude(self):
         arr = self.query('DOUT?').split('.')
