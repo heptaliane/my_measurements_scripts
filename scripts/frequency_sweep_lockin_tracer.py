@@ -8,7 +8,7 @@ import numpy as np
 
 from common import write_csv
 from device import SignalGenerator, LockinAmplifier
-from gui import GPIBArgumentParser, DialogMode
+from gui import GPIBArgumentParser, MeasureMonitor, DialogMode
 
 from logging import getLogger, INFO, StreamHandler, NullHandler
 root_logger = getLogger()
@@ -54,6 +54,10 @@ def main():
     lockin = args['device']['Lock-in amplifier']
     sig_gen = args['device']['Signal generator']
 
+    monitor = MeasureMonitor(('frequency', 'frequency'), ('X', 'Y'))
+    xs = list()
+    ys = list()
+
     sig_gen.set_frequency(freq[0])
     sig_gen.start()
     for f in freq:
@@ -67,7 +71,13 @@ def main():
 
         with open(outfile, 'a') as fs:
             fs.write('%.6e, %.4e, %.4e, %.4e\n' % (f, x, y, r))
+
+        # Update monitor
+        xs.append(x)
+        ys.append(y)
+        monitor.update((freq[:len(xs)], freq[:len(ys)]), (xs, ys))
     sig_gen.stop()
+    monitor.finalize()
 
 if __name__ == '__main__':
     main()
