@@ -54,6 +54,9 @@ def main():
     lockin = args['device']['Lock-in amplifier']
     sig_gen = args['device']['Signal generator']
 
+    lockin.set_variable_type(lockin.VariableType.X)
+    lockin.set_variable_type(lockin.VariableType.Y)
+
     monitor = MeasureMonitor(('frequency', 'frequency'), ('X', 'Y'))
     xs = list()
     ys = list()

@@ -44,8 +44,7 @@ class NF_LI5640(LockinAmplifier):
 
         # Set output data format: Channel1, Channel2, reference frequency
         self.set_output_type_format(self.OutputType.DATA1,
-                                    self.OutputType.DATA2,
-                                    self.OutputType.FREQUENCY)
+                                    self.OutputType.DATA2)
 
     def set_output_type_format(self, *args):
         args = [arg.value if isinstance(arg, self.OutputType) else arg
@@ -112,7 +111,7 @@ class NF_LI5640(LockinAmplifier):
         return AVAILABLE_CURRENT_RANGE[iidx]
 
     def get_amplitude(self):
-        arr = self.query('DOUT?').split('.')
+        arr = self.query('DOUT?').split(',')
         return tuple([float(v) for v in arr])
 
     def write(self, cmd, *args):
