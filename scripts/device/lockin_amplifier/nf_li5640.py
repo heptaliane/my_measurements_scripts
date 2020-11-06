@@ -8,7 +8,6 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-
 AVAILABLE_VOLTAGE_RANGE = (2.0e-9, 5.0e-9, 1.0e-8, 2.0e-8, 5.0e-8,
                            1.0e-7, 2.0e-7, 5.0e-7, 1.0e-6, 2.0e-6,
                            5.0e-6, 1.0e-5, 2.0e-5, 5.0e-5, 1.0e-4,

@@ -6,8 +6,8 @@ import time
 import numpy as np
 
 from common import write_csv
-from device import get_devices
-from gui import GraphicalArgumentParser
+from device import Oscilloscope, SignalGenerator
+from gui import GPIBArgumentParser, DialogMode
 
 from logging import getLogger, INFO, StreamHandler, NullHandler
 root_logger = getLogger()
@@ -18,13 +18,10 @@ logger.addHandler(NullHandler())
 
 
 def parse_arguments():
-    parser = GraphicalArgumentParser('Osilloscope monitor')
-    parser.add_argument('output directory', './data', browse_mode='d',
+    parser = GPIBArgumentParser('Frequency sweep Oscilloscope monitor')
+    parser.add_argument('output directory', './data/oscilloscope',
+                        browse_mode=DialogMode.DIRECTORY,
                         help='Path to output directory.')
-    parser.add_argument('oscilloscope GPIB', 'GPIB0::0::INSTR',
-                        help='Oscilloscope GPIB address.')
-    parser.add_argument('signal generator GPIB', 'GPIB0::0::INSTR',
-                        help='Signal Generator GPIB address.')
     parser.add_argument('start frequency', 0.0, type=float,
                         help='Sweep frequency from this value. (Hz)')
     parser.add_argument('end frequency', 1.0, type=float,
@@ -32,7 +29,9 @@ def parse_arguments():
     parser.add_argument('sample frequency', 1, type=int,
                         help='The number of sample frequencies.')
     parser.add_argument('cumulative time', 1.0, type=float,
-                        help='Osilloscope signal cumlative time. (s)')
+                        help='Oscilloscope signal cumlative time. (s)')
+    parser.add_device('oscilloscope', Oscilloscope)
+    parser.add_device('signal generator', SignalGenerator)
 
     args = parser.parse_args()
     return args
@@ -44,10 +43,8 @@ def main():
     dst_dir = args['output directory']
     os.makedirs(dst_dir, exist_ok=True)
 
-    dm = DeviceManager()
-
-    osc = dm.setup_oscilloscope(args.get('oscilloscope GPIB'))
-    sig = dm.setup_signal_generator(args.get('signal generator GPIB'))
+    osc = args['device']['oscilloscope']
+    sig = args['device']['signal generator']
 
     freq = np.linspace(args.get('start frequency'),
                        args.get('end frequency'),
@@ -80,7 +77,7 @@ def main():
         comments = ('Frequency: %.4e Hz' % f,
                     'Cumulative time: %.2f s' % wait_time)
 
-        filename = 'osciiloscope_monitor_%.2e_Hz.dat' % f
+        filename = 'osciiloscope_monitor_%.5e_Hz.dat' % f
         write_csv(os.path.join(dst_dir, filename), columns, labels, comments)
 
 

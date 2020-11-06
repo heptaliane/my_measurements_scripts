@@ -7,7 +7,7 @@ import math
 import numpy as np
 
 from common import write_csv
-from device import SignalGenerator, LockinAmplifier
+from device import SignalGenerator, LockinAmplifier, FrequencyCounter
 from gui import GPIBArgumentParser, MeasureMonitor, DialogMode
 
 from logging import getLogger, INFO, StreamHandler, NullHandler
@@ -33,6 +33,7 @@ def parse_arguments():
                         help='Lock-in signal cumulative time. (s)')
     parser.add_device('Lock-in amplifier', LockinAmplifier)
     parser.add_device('Signal generator', SignalGenerator)
+    parser.add_device('Frequency counter', FrequencyCounter)
 
     args = parser.parse_args()
     return args
@@ -44,7 +45,7 @@ def main():
     outfile = args['output file']
     os.makedirs(os.path.dirname(outfile), exist_ok=True)
     with open(outfile, 'w') as f:
-        f.write('# frequency / Hz, X / V, Y / V, R / V\n')
+        f.write('# frequency / Hz, X / V, Y / V, R / V, Theta / degree\n')
 
     freq = np.linspace(args.get('start frequency'),
                        args.get('end frequency'),
@@ -53,6 +54,7 @@ def main():
 
     lockin = args['device']['Lock-in amplifier']
     sig_gen = args['device']['Signal generator']
+    counter = args['device']['Frequency counter']
 
     lockin.set_variable_type(lockin.VariableType.X)
     lockin.set_variable_type(lockin.VariableType.Y)
@@ -63,6 +65,7 @@ def main():
 
     sig_gen.set_frequency(freq[0])
     sig_gen.start()
+    time.sleep(wait_time)
     for f in freq:
         logger.info('Set frequency: %.4e Hz', f)
         sig_gen.set_frequency(f)
@@ -71,9 +74,13 @@ def main():
 
         x, y = lockin.get_amplitude()
         r = math.sqrt(x ** 2 + y ** 2)
+        theta = math.degrees(math.atan2(y, x))
+
+        if counter is not None:
+            f = counter.get()
 
         with open(outfile, 'a') as fs:
-            fs.write('%.6e, %.4e, %.4e, %.4e\n' % (f, x, y, r))
+            fs.write('%.6e, %.4e, %.4e, %.4e, %.2f\n' % (f, x, y, r, theta))
 
         # Update monitor
         xs.append(x)

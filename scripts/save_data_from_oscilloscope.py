@@ -37,7 +37,7 @@ def main():
 
     wait_time = args.get('cumulative time')
 
-    osc = args['oscilloscope']
+    osc = args['device']['oscilloscope']
 
     osc.start()
 
@@ -57,7 +57,7 @@ def main():
             columns.append(v[0])
         labels.append(label)
         columns.append(v[1])
-            
+
     write_csv(dst_file, columns, labels)
 
 

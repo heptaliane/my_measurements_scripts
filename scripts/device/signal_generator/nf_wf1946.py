@@ -3,7 +3,10 @@ from .interface import SignalGenerator
 
 
 class NF_WF1946(SignalGenerator):
-    IDN_STR = 'NF-ELECTRONIC-INSTRUMENTS,WF1946'
+    IDN_STR = (
+        'NF-ELECTRONIC-INSTRUMENTS,WF1946',
+        '"NF-ELECTRONIC-INSTRUMENTS,1945',
+    )
 
     MIN_FREQ = 1e-8
     MAX_FREQ = 1.5e7

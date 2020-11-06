@@ -60,7 +60,11 @@ class GPIBSelection(tk.Frame):
 
     def get(self):
         value = self._curr.get()
+        if value == '':
+            return None
+
         idx = self._selections.index(value)
+
         dev = [*self._devices.values()][idx]
         return dev
 
@@ -98,10 +102,9 @@ class GPIBFilteredSelection(tk.Frame):
     def get(self):
         dtype = self._fil_cbox.get()
         value = self._dev_cbox.get()
+        if value == '':
+            return None
         idx = self._selections.index(value)
-        if idx is None:
-            return ''
-
         dev = [*self._devices[dtype].values()][idx]
         return dev
 

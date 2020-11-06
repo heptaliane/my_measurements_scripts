@@ -3,6 +3,9 @@ import visa
 from . import lockin_amplifier
 from . import signal_generator
 from . import oscilloscope
+from . import multimeter
+from . import lcr_meter
+from . import frequency_counter
 
 from logging import getLogger, NullHandler
 logger = getLogger(__name__)
@@ -42,7 +45,12 @@ class DeviceProvider():
 
     def __call__(self, address):
         resource = self._rm.open_resource(address)
-        idn = resource.query('*IDN?')
+        try:
+            idn = resource.query('*IDN?')
+        except visa.errors.VisaIOError:
+            logger.warn('Device "%s" did not return "*IDN?" responce.',
+                        address)
+            idx = ""
 
         for model in self._models:
             if _check_model_id(model, idn):
