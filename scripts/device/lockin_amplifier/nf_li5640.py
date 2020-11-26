@@ -113,6 +113,9 @@ class NF_LI5640(LockinAmplifier):
         arr = self.query('DOUT?').split(',')
         return tuple([float(v) for v in arr])
 
+    def get_frequency(self):
+        return float(self.query('FREQ?'))
+
     def write(self, cmd, *args):
         # Command should not end with ' '
         while cmd.endswith(' '):

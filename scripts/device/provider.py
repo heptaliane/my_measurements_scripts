@@ -6,6 +6,7 @@ from . import oscilloscope
 from . import multimeter
 from . import lcr_meter
 from . import frequency_counter
+from . import temprature_controller
 
 from logging import getLogger, NullHandler
 logger = getLogger(__name__)

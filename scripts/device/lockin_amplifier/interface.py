@@ -40,3 +40,7 @@ class LockinAmplifier(DeviceHandler, metaclass=ABCMeta):
     @abstractmethod
     def get_amplitude(self):
         raise NotImplementedError()
+
+    @abstractmethod
+    def get_frequency(self):
+        raise NotImplementedError()

@@ -29,7 +29,7 @@ class MeasureMonitor():
             dy = 1 if ymax == ymin else (ymax - ymin) * 0.1
             self.axes[i].set_xlim((xmin - dx, xmax + dx))
             self.axes[i].set_ylim((ymin - dy, ymax + dy))
-        plt.pause(1.0)
+        plt.pause(0.1)
 
     def finalize(self):
         plt.show()

@@ -9,6 +9,7 @@ from .oscilloscope import Oscilloscope
 from .multimeter import Multimeter
 from .lcr_meter import LCRMeter
 from .frequency_counter import FrequencyCounter
+from .temprature_controller import TempratureController
 
 
 def get_devices():

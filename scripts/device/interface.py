@@ -32,3 +32,7 @@ class DeviceHandler(metaclass=ABCMeta):
             cmd += '?'
 
         return self._inst.query_binary_values(cmd, **kwargs)
+
+    @property
+    def address(self):
+        return self._inst.resource_name
