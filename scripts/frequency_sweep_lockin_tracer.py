@@ -59,9 +59,11 @@ def main():
     lockin.set_variable_type(lockin.VariableType.X)
     lockin.set_variable_type(lockin.VariableType.Y)
 
-    monitor = MeasureMonitor(('frequency', 'frequency'), ('X', 'Y'))
-    xs = list()
-    ys = list()
+    view = MeasureMonitor.MonitorParameter('Frequency / Hz', 'Amplitude / mV',
+                                           ymul=1.0e3)
+    view.add_plot(key='X', line=True, value_fmt='%.3f')
+    view.add_plot(key='Y', line=True, marker='D', value_fmt='%.3f')
+    monitor = MeasureMonitor(view)
 
     sig_gen.set_frequency(freq[0])
     sig_gen.start()
@@ -83,9 +85,7 @@ def main():
             fs.write('%.6e, %.4e, %.4e, %.4e, %.2f\n' % (f, x, y, r, theta))
 
         # Update monitor
-        xs.append(x)
-        ys.append(y)
-        monitor.update((freq[:len(xs)], freq[:len(ys)]), (xs, ys))
+        monitor.update(((f, x), (f, y)))
     sig_gen.stop()
     monitor.finalize()
 

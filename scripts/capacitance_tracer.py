@@ -38,9 +38,9 @@ def main():
     lcr = args['device']['LCR meter']
     lcr.set_mode(lcr.Mode.CAPACITANCE, is_big_value=False)
 
-    monitor = MeasureMonitor(('Time / s',), ('Capacitance / pF',))
-    ts = list()
-    cs = list()
+    view = MeasureMonitor('Time / s', 'Capacitance / pF')
+    view.add_plot(value_fmt='%.5e')
+    monitor = MeasureMonitor(view)
 
     t0 = time.time()
     c_mul = 1.0e12
@@ -50,11 +50,9 @@ def main():
         c = lcr.get() * c_mul
 
         with open(outfile, 'a') as f:
-            f.write('%.1f, %.8e\n' % (t0, c))
+            f.write('%.1f, %.8e\n' % (t, c))
 
-        ts.append(t)
-        cs.append(c)
-        monitor.update((ts,), (cs,))
+        monitor.update((t, c))
 
 
 if __name__ == '__main__':

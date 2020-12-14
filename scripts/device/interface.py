@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta, abstractmethod
 
-from visa import Resource
+from pyvisa import Resource
 
 
 class DeviceHandler(metaclass=ABCMeta):

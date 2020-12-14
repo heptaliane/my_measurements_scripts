@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import visa
+import pyvisa as visa
 from . import lockin_amplifier
 from . import signal_generator
 from . import oscilloscope
@@ -48,10 +48,10 @@ class DeviceProvider():
         resource = self._rm.open_resource(address)
         try:
             idn = resource.query('*IDN?')
-        except visa.errors.VisaIOError:
+        except visa.VisaIOError:
             logger.warn('Device "%s" did not return "*IDN?" responce.',
                         address)
-            idx = ""
+            idn = ""
 
         for model in self._models:
             if _check_model_id(model, idn):

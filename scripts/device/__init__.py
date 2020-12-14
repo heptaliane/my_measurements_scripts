@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import visa
+import pyvisa as visa
 
 from .provider import DeviceProvider
 from .interface import DeviceHandler

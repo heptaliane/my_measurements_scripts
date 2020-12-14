@@ -66,3 +66,6 @@ class Stanford_SR844(LockinAmplifier):
 
     def get_amplitude(self):
         return tuple([float(self.query('OUTR? %d', i)) for i in (1, 2)])
+
+    def get_frequency(self):
+        return float(self.query('FREQ?'))
